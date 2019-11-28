@@ -1,5 +1,9 @@
 package helper;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.eclipse.elk.graph.ElkEdge;
 import org.eclipse.elk.graph.ElkNode;
 import org.eclipse.elk.graph.properties.Property;
@@ -27,13 +31,26 @@ public class Help {
         e.setProperty(prop, new EdgeProperty());
         return e.getProperty(prop);
     }
-    public static GraphProperty getGraphProp(ElkNode e) {
+    public static GraphProperty getGraphProp(ElkNode n) {
         Property<GraphProperty> prop = new Property<GraphProperty>("graph-prop");
         
-        if (e.hasProperty(prop))
-            return e.getProperty(prop);
+        if (n.hasProperty(prop))
+            return n.getProperty(prop);
         
-        e.setProperty(prop, new GraphProperty());
-        return e.getProperty(prop);
+        n.setProperty(prop, new GraphProperty());
+        return n.getProperty(prop);
+    }
+    
+    public static List<ElkNode> getChilds(ElkNode n) {
+        var outs = n.getOutgoingEdges();
+        List<ElkNode> re = new ArrayList<ElkNode>();
+        for (var out : outs) {
+            for (var target : out.getTargets())
+                if (ElkNode.class.isAssignableFrom(target.getClass())) {
+                    re.add((ElkNode)target);
+                }
+        }
+        re = re.stream().distinct().collect(Collectors.toList());
+        return re;
     }
 }

@@ -8,7 +8,4 @@ public class NodeProperty {
     // cycleBreaking
     public boolean visiting = false;
     public boolean visited = false;
-    
-    // crossMin
-    public double barycenterVal;
 }
