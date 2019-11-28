@@ -17,6 +17,7 @@ import phases.EdgeRoutingLayerPhase;
 import phases.InorderLayoutPhase;
 import phases.LeftyLayoutPhase;
 import phases.Phase;
+import phases.RTLayoutPhase;
 import trees.options.TreesOptions;
 
 /**
@@ -33,7 +34,7 @@ public class TreesLayoutProvider extends AbstractLayoutProvider {
         // Start progress monitor
         progressMonitor.begin("TreeLayouting", prePhases.length);
         progressMonitor.log("Algorithm began");
-
+        
         // Set Start Size
         layoutGraph.setWidth(2000);
         layoutGraph.setHeight(2000);
@@ -44,13 +45,19 @@ public class TreesLayoutProvider extends AbstractLayoutProvider {
         }
         
         // Apply the chosen phases
-        switch (1) {
-        case 0:
-            applyPhase(layoutGraph, progressMonitor, new LeftyLayoutPhase());
-            break;
-        case 1:
-            applyPhase(layoutGraph, progressMonitor, new InorderLayoutPhase());
-            break;
+        //switch (layoutGraph.getProperty(TreesOptions.LAYOUT_ALGORITHM)) {
+        switch (2) {
+            case 0:
+                applyPhase(layoutGraph, progressMonitor, new LeftyLayoutPhase());
+                break;
+            case 1:
+                applyPhase(layoutGraph, progressMonitor, new InorderLayoutPhase());
+                break;
+            case 2:
+                applyPhase(layoutGraph, progressMonitor, new RTLayoutPhase());
+                break;
+            default:
+                System.out.println("Thats not a valid algorithm id!");
         }
 
         // Apply all postPhases

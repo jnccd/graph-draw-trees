@@ -24,6 +24,11 @@ public class TreesOptions implements ILayoutMetaDataProvider {
   public static final IProperty<Boolean> REVERSE_INPUT = TreesMetadataProvider.REVERSE_INPUT;
   
   /**
+   * Choose between Lefty (0), Inorder (1), RT (2)
+   */
+  public static final IProperty<Integer> LAYOUT_ALGORITHM = TreesMetadataProvider.LAYOUT_ALGORITHM;
+  
+  /**
    * Default value for {@link #PADDING} with algorithm "Trees".
    */
   private static final ElkPadding PADDING_DEFAULT = new ElkPadding(10);
@@ -93,7 +98,7 @@ public class TreesOptions implements ILayoutMetaDataProvider {
     registry.register(new LayoutAlgorithmData.Builder()
         .id("trees.Trees")
         .name("Trees")
-        .description("I like trees")
+        .description("I like trees, they aren\'t coarse and rough and they also don\'t get everywhere")
         .providerFactory(new TreesFactory())
         .melkBundleName(null)
         .definingBundleId("trees")
@@ -103,6 +108,11 @@ public class TreesOptions implements ILayoutMetaDataProvider {
         "trees.Trees",
         "trees.reverseInput",
         REVERSE_INPUT.getDefault()
+    );
+    registry.addOptionSupport(
+        "trees.Trees",
+        "trees.layoutAlgorithm",
+        LAYOUT_ALGORITHM.getDefault()
     );
     registry.addOptionSupport(
         "trees.Trees",

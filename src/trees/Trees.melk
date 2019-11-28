@@ -17,11 +17,20 @@ option reverseInput : boolean {
     targets parents
 }
 
+option layoutAlgorithm : int {
+    label "Layout Algorithm ID"
+    description
+        "Choose between Lefty (0), Inorder (1), RT (2)"
+    default = 2
+    targets parents
+}
+
 algorithm Trees(TreesLayoutProvider) {
     label "Trees"
-    description "I like trees"
+    description "I like trees, they aren't coarse and rough and they also don't get everywhere"
     metadataClass options.TreesOptions
     supports reverseInput
+    supports layoutAlgorithm
     supports org.eclipse.elk.padding = new ElkPadding(10)
     supports org.eclipse.elk.spacing.edgeEdge = 5
     supports org.eclipse.elk.spacing.edgeNode = 10
