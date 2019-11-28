@@ -14,6 +14,7 @@ import org.eclipse.elk.graph.util.ElkGraphUtil;
 
 import phases.BinaryTreeCheckPhase;
 import phases.EdgeRoutingLayerPhase;
+import phases.InorderLayoutPhase;
 import phases.LeftyLayoutPhase;
 import phases.Phase;
 import trees.options.TreesOptions;
@@ -43,9 +44,12 @@ public class TreesLayoutProvider extends AbstractLayoutProvider {
         }
         
         // Apply the chosen phases
-        switch (0) {
+        switch (1) {
         case 0:
             applyPhase(layoutGraph, progressMonitor, new LeftyLayoutPhase());
+            break;
+        case 1:
+            applyPhase(layoutGraph, progressMonitor, new InorderLayoutPhase());
             break;
         }
 

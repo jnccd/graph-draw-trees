@@ -19,7 +19,7 @@ option reverseInput : boolean {
 
 algorithm Trees(TreesLayoutProvider) {
     label "Trees"
-    description "Please insert a short but informative description here"
+    description "I like trees"
     metadataClass options.TreesOptions
     supports reverseInput
     supports org.eclipse.elk.padding = new ElkPadding(10)

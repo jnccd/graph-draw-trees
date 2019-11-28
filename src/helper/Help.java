@@ -53,4 +53,16 @@ public class Help {
         re = re.stream().distinct().collect(Collectors.toList());
         return re;
     }
+    public static List<ElkNode> getParents(ElkNode n) {
+        var outs = n.getIncomingEdges();
+        List<ElkNode> re = new ArrayList<ElkNode>();
+        for (var out : outs) {
+            for (var target : out.getSources())
+                if (ElkNode.class.isAssignableFrom(target.getClass())) {
+                    re.add((ElkNode)target);
+                }
+        }
+        re = re.stream().distinct().collect(Collectors.toList());
+        return re;
+    }
 }

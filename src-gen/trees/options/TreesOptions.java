@@ -93,7 +93,7 @@ public class TreesOptions implements ILayoutMetaDataProvider {
     registry.register(new LayoutAlgorithmData.Builder()
         .id("trees.Trees")
         .name("Trees")
-        .description("Please insert a short but informative description here")
+        .description("I like trees")
         .providerFactory(new TreesFactory())
         .melkBundleName(null)
         .definingBundleId("trees")
