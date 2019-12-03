@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.elk.core.math.ElkPadding;
 import org.eclipse.elk.core.util.IElkProgressMonitor;
+import org.eclipse.elk.core.util.Pair;
 import org.eclipse.elk.graph.ElkNode;
 
 import helper.Help;
@@ -21,7 +22,7 @@ public class RTLayoutPhase implements Phase {
         
         var root = nodes.stream().filter(x -> x.getIncomingEdges().size() == 0).findFirst().get();
         
-        phase1(root);
+        phase1(root);        
         root.setX(-phase2(root) + padding.left);
         phase3(root, root.getX(), 0, nodeNodeSpacing, padding);
     }
@@ -42,18 +43,11 @@ public class RTLayoutPhase implements Phase {
             Help.getProp(rightChild).xOffset = minSep;
         
         double dv = minSep * 2, dl = 0, dr = 0;
-        if (leftChild != null && rightChild != null) { // TODO: Add proper contourTraversal
-            ElkNode l = leftChild, r = rightChild;
-            while (Help.getChilds(l).size() > 1 && Help.getChilds(r).size() > 0) {
-                dl += Help.getProp(Help.getChilds(l).get(1)).xOffset;
-                dr += Help.getProp(Help.getChilds(r).get(0)).xOffset;
-                
-                if (dr - dl - l.getWidth() + dv - minSep < 0) 
-                    dv = dl + l.getWidth() - dr + minSep;
-                
-                l = Help.getChilds(l).get(1);
-                r = Help.getChilds(r).get(0);
-            }
+        var lC = getContour(leftChild, false);
+        var rC = getContour(rightChild, true);
+        for (int i = 0; i < Math.min(lC.length, rC.length); i++) {
+            if (rC[i] - lC[i] + dv - minSep < 0)
+                dv = lC[i] - rC[i] - minSep;
         }
         
         if (leftChild != null) 
@@ -62,10 +56,49 @@ public class RTLayoutPhase implements Phase {
             Help.getProp(rightChild).xOffset = dv / 2;
     }
     
+    double[] getContour(ElkNode root, boolean left) { // Inefficient but it works
+        if (root == null)
+            return new double[] { 0 };
+        
+        var c = Help.getChilds(root);
+        
+        if (c.size() == 0)
+            return new double[] { 0 };
+        
+        var lc = c.get(0);
+        var rc = c.get(c.size() - 1);
+        
+        var lC = getContour(lc, left);
+        var rC = getContour(rc, left);
+        
+        double[] re = new double[Math.max(lC.length, rC.length) + 1];
+        re[0] = 0;
+        for (int i = 1; i < re.length; i++) {
+            if (left) {
+                re[i] = Integer.MAX_VALUE;
+                
+                if (lC.length > i - 1)
+                    re[i] = Math.min(lC[i - 1] + Help.getProp(lc).xOffset, re[i]);
+                if (rC.length > i - 1)
+                    re[i] = Math.min(rC[i - 1] + Help.getProp(rc).xOffset, re[i]);
+            }
+            else{
+                re[i] = Integer.MIN_VALUE;
+                
+                if (lC.length > i - 1)
+                    re[i] = Math.max(lC[i - 1] + Help.getProp(lc).xOffset + lc.getWidth(), re[i]);
+                if (rC.length > i - 1)
+                    re[i] = Math.max(rC[i - 1] + Help.getProp(rc).xOffset + rc.getWidth(), re[i]);
+            }
+        }
+        
+        return re;
+    }
+    
     double phase2(ElkNode r) {
         double re = 0.0;
         while (Help.getChilds(r).size() > 0) {
-            re += Help.getProp(r).xOffset;
+            re += Help.getProp(r).xOffset + r.getWidth() / 2;
             r = Help.getChilds(r).get(0);
         }
         return re;

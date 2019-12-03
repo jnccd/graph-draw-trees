@@ -61,9 +61,9 @@ public class TreesLayoutProvider extends AbstractLayoutProvider {
         }
 
         // Apply all postPhases
-        for (Phase p : postPhases) {
-            applyPhase(layoutGraph, progressMonitor, p);
-        }
+        for (Phase p : postPhases) 
+            if (!applyPhase(layoutGraph, progressMonitor, p))
+                break;
 
         // Set the size of the final diagram dynamically
         var nodes = layoutGraph.getChildren();
@@ -79,7 +79,7 @@ public class TreesLayoutProvider extends AbstractLayoutProvider {
         progressMonitor.done();
     }
 
-    public void applyPhase(ElkNode layoutGraph, IElkProgressMonitor progressMonitor, Phase p) {
+    public boolean applyPhase(ElkNode layoutGraph, IElkProgressMonitor progressMonitor, Phase p) {
         // Create a sub monitor
         IElkProgressMonitor monitor = progressMonitor.subTask(1);
         monitor.begin(p.getClass().getName(), 1);
@@ -90,11 +90,12 @@ public class TreesLayoutProvider extends AbstractLayoutProvider {
         } catch (Exception e) {
             progressMonitor.log(p.getClass().getName() + " had an error!");
             e.printStackTrace();
-            return;
+            return false;
         }
 
         // Close the sub monitor
         monitor.done();
         monitor.logGraph(layoutGraph, p.getClass().getName() + " done!");
+        return true;
     }
 }

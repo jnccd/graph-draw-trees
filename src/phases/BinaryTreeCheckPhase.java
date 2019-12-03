@@ -1,5 +1,6 @@
 package phases;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,9 +22,13 @@ public class BinaryTreeCheckPhase implements Phase {
             if (Help.getChilds(n).size() > 2)
                 throw new Exception("Node " + n.getIdentifier() + 
                         " has more than 2 child nodes which is pretty unbinary!");
-        if (nodes.stream().
-                filter(x -> x.getIncomingEdges().size() == 0).collect(Collectors.toList()).size() != 1)
-            throw new Exception("It's I am gRoot and not we are gRoot! (A binary tree only has one root)");
+        ArrayList<ElkNode> groots = (ArrayList<ElkNode>) nodes.stream().
+                filter(x -> x.getIncomingEdges().size() == 0).
+                collect(Collectors.toList());
+        if (groots.size() != 1)
+            throw new Exception(
+                    "Here it's I am gRoot and not we are gRoot! (A binary tree only has one root but this one has " + 
+                            groots.stream().map(x -> x.getIdentifier()).reduce((x, y) -> x + ", " + y) + ")");
     }
     
     boolean hasCycle(ElkNode layoutGraph) {
