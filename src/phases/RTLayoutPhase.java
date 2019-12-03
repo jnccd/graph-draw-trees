@@ -23,7 +23,7 @@ public class RTLayoutPhase implements Phase {
         var root = nodes.stream().filter(x -> x.getIncomingEdges().size() == 0).findFirst().get();
         
         phase1(root);        
-        root.setX(-phase2(root) + padding.left);
+        root.setX(phase2(root) + padding.left);
         phase3(root, root.getX(), 0, nodeNodeSpacing, padding);
     }
 
@@ -50,10 +50,16 @@ public class RTLayoutPhase implements Phase {
                 dv = lC[i] - rC[i] - minSep;
         }
         
-        if (leftChild != null) 
+        // Center child if there is only one, not doing this would make 
+        // trees where the root only has 1 subtree look unbalanced/unsymmetric
+        if      (leftChild == null && rightChild != null)
+            Help.getProp(rightChild).xOffset = 0;
+        else if (leftChild != null && rightChild == null)
+            Help.getProp(leftChild).xOffset = 0;
+        else if (leftChild != null && rightChild != null) {
             Help.getProp(leftChild).xOffset = -dv / 2;
-        if (rightChild != null)
-            Help.getProp(rightChild).xOffset = dv / 2;
+            Help.getProp(rightChild).xOffset = dv / 2;;
+        }
     }
     
     double[] getContour(ElkNode root, boolean left) { // Inefficient but it works

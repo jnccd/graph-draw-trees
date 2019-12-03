@@ -24,9 +24,16 @@ public class TreesOptions implements ILayoutMetaDataProvider {
   public static final IProperty<Boolean> REVERSE_INPUT = TreesMetadataProvider.REVERSE_INPUT;
   
   /**
+   * Default value for {@link #LAYOUT_ALGORITHM} with algorithm "Trees".
+   */
+  private static final int LAYOUT_ALGORITHM_DEFAULT = 2;
+  
+  /**
    * Choose between Lefty (0), Inorder (1), RT (2)
    */
-  public static final IProperty<Integer> LAYOUT_ALGORITHM = TreesMetadataProvider.LAYOUT_ALGORITHM;
+  public static final IProperty<Integer> LAYOUT_ALGORITHM = new Property<Integer>(
+                                TreesMetadataProvider.LAYOUT_ALGORITHM,
+                                LAYOUT_ALGORITHM_DEFAULT);
   
   /**
    * Default value for {@link #PADDING} with algorithm "Trees".
@@ -112,7 +119,7 @@ public class TreesOptions implements ILayoutMetaDataProvider {
     registry.addOptionSupport(
         "trees.Trees",
         "trees.layoutAlgorithm",
-        LAYOUT_ALGORITHM.getDefault()
+        LAYOUT_ALGORITHM_DEFAULT
     );
     registry.addOptionSupport(
         "trees.Trees",

@@ -45,8 +45,7 @@ public class TreesLayoutProvider extends AbstractLayoutProvider {
         }
         
         // Apply the chosen phases
-        //switch (layoutGraph.getProperty(TreesOptions.LAYOUT_ALGORITHM)) {
-        switch (2) {
+        switch (layoutGraph.getProperty(TreesOptions.LAYOUT_ALGORITHM)) {
             case 0:
                 applyPhase(layoutGraph, progressMonitor, new LeftyLayoutPhase());
                 break;
