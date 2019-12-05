@@ -14,6 +14,7 @@ import org.eclipse.elk.graph.util.ElkGraphUtil;
 
 import phases.BinaryTreeCheckPhase;
 import phases.EdgeRoutingLayerPhase;
+import phases.FixNodeCoordsPhase;
 import phases.InorderLayoutPhase;
 import phases.LeftyLayoutPhase;
 import phases.Phase;
@@ -25,9 +26,19 @@ import trees.options.TreesOptions;
  * edges.
  */
 public class TreesLayoutProvider extends AbstractLayoutProvider {
-
-    Phase[] prePhases = new Phase[] { new BinaryTreeCheckPhase() };
-    Phase[] postPhases = new Phase[] { new EdgeRoutingLayerPhase() };
+    /*
+     * This algorithm assumes that the the order of child nodes is given by their position in
+     * the result of Help.getChildren() which in turn gets the positions by concatenating all
+     * the target node lists from all outgoing edges onto each other.
+     */
+    
+    Phase[] prePhases = new Phase[] { 
+            new BinaryTreeCheckPhase() 
+            };
+    Phase[] postPhases = new Phase[] { 
+            new FixNodeCoordsPhase(), 
+            new EdgeRoutingLayerPhase() 
+            };
 
     @Override
     public void layout(ElkNode layoutGraph, IElkProgressMonitor progressMonitor) {
@@ -40,9 +51,9 @@ public class TreesLayoutProvider extends AbstractLayoutProvider {
         layoutGraph.setHeight(2000);
 
         // Apply all prePhases
-        for (Phase p : prePhases) {
-            applyPhase(layoutGraph, progressMonitor, p);
-        }
+        for (Phase p : prePhases) 
+            if (!applyPhase(layoutGraph, progressMonitor, p))
+                break;
         
         // Apply the chosen phases
         switch (layoutGraph.getProperty(TreesOptions.LAYOUT_ALGORITHM)) {

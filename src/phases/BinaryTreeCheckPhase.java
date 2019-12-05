@@ -19,7 +19,7 @@ public class BinaryTreeCheckPhase implements Phase {
         if (hasCycle(layoutGraph))
             throw new Exception("Nobody told me I had to layout cyclic graphs D:");
         for (var n : nodes)
-            if (Help.getChilds(n).size() > 2)
+            if (Help.getChildren(n).size() > 2)
                 throw new Exception("Node " + n.getIdentifier() + 
                         " has more than 2 child nodes which is pretty unbinary!");
         ArrayList<ElkNode> groots = (ArrayList<ElkNode>) nodes.stream().

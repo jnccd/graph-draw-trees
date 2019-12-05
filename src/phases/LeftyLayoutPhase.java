@@ -26,7 +26,7 @@ public class LeftyLayoutPhase implements Phase {
         for (int i = 0; i < layers.size(); i++) {
             List<ElkNode> layerChildren = new ArrayList<ElkNode>();
             for (var n : layers.get(i))
-                layerChildren.addAll(Help.getChilds(n));
+                layerChildren.addAll(Help.getChildren(n));
             
             if (layerChildren.size() > 0) {
                 layers.add(new ArrayList<ElkNode>());

@@ -22,13 +22,16 @@ public class RTLayoutPhase implements Phase {
         
         var root = nodes.stream().filter(x -> x.getIncomingEdges().size() == 0).findFirst().get();
         
-        phase1(root);        
+        phase1(root);
+        monitor.logGraph(layoutGraph, "Phase 1 done.");
         root.setX(phase2(root) + padding.left);
+        monitor.logGraph(layoutGraph, "Phase 2 done.");
         phase3(root, root.getX(), 0, nodeNodeSpacing, padding);
+        monitor.logGraph(layoutGraph, "Phase 3 done.");
     }
 
     void phase1(ElkNode n) {
-        var childs = Help.getChilds(n);
+        var childs = Help.getChildren(n);
         ElkNode leftChild = null, rightChild = null;
         if (childs.size() > 0) 
             leftChild = childs.get(0);
@@ -46,8 +49,8 @@ public class RTLayoutPhase implements Phase {
         var lC = getContour(leftChild, false);
         var rC = getContour(rightChild, true);
         for (int i = 0; i < Math.min(lC.length, rC.length); i++) {
-            if (rC[i] - lC[i] + dv - minSep < 0)
-                dv = lC[i] - rC[i] - minSep;
+            if (rC[i] - lC[i] + dv < 0)
+                dv = lC[i] - rC[i] + minSep;
         }
         
         // Center child if there is only one, not doing this would make 
@@ -66,7 +69,7 @@ public class RTLayoutPhase implements Phase {
         if (root == null)
             return new double[] { 0 };
         
-        var c = Help.getChilds(root);
+        var c = Help.getChildren(root);
         
         if (c.size() == 0)
             return new double[] { 0 };
@@ -103,16 +106,16 @@ public class RTLayoutPhase implements Phase {
     
     double phase2(ElkNode r) {
         double re = 0.0;
-        while (Help.getChilds(r).size() > 0) {
+        while (Help.getChildren(r).size() > 0) {
             re += Help.getProp(r).xOffset + r.getWidth() / 2;
-            r = Help.getChilds(r).get(0);
+            r = Help.getChildren(r).get(0);
         }
         return re;
     }
     
     void phase3(ElkNode r, double rootOffset, int depth, 
             double nodeNodeSpacing, ElkPadding padding) {
-        var childs = Help.getChilds(r);
+        var childs = Help.getChildren(r);
         ElkNode leftChild = null, rightChild = null;
         if (childs.size() > 0) 
             leftChild = childs.get(0);

@@ -41,7 +41,7 @@ public class Help {
         return n.getProperty(prop);
     }
     
-    public static List<ElkNode> getChilds(ElkNode n) {
+    public static List<ElkNode> getChildren(ElkNode n) {
         var outs = n.getOutgoingEdges();
         List<ElkNode> re = new ArrayList<ElkNode>();
         for (var out : outs) {

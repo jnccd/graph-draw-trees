@@ -40,7 +40,7 @@ public class InorderLayoutPhase implements Phase {
     }
     
     void inorder(ElkNode n) {
-        var childs = Help.getChilds(n);
+        var childs = Help.getChildren(n);
         if (childs.size() > 0) {
             var leftChild = childs.get(0);
             inorder(leftChild);
